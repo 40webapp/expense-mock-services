@@ -53,7 +53,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/success_token"
+                  "$ref" : "#/components/schemas/SuccessToken"
                 }
               }
             }
@@ -252,9 +252,18 @@
         "format" : "date-time",
         "example" : "2020-04-04T17:51:03.001Z"
       },
-      "success_token" : {
+      "token" : {
         "type" : "string",
         "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiI0MzA1QkNCNi0yOUFELTQzOEEtQjA2OC00MzU5MTZBRUU1QUEiLCJib3NzX2lkIjoiRTc5RkY5NTgtOTRGQy00OUVCLUI3RjYtNTdDMzJDMjY5QzI3IiwiZmlyc3RfbmFtZSI6IuOBl-OCh-OBhiIsImxhc3RfbmFtZSI6IuOBjeOBleOCieOBjiIsImVtYWlsIjoic2hvQG9zaGlpcmUudG8iLCJpYXQiOjE1MTYyMzkwMjJ9.Ne-6UQmOmhEMwvxt0OJYcC0bSSuKznnvhCnT2thmH8I\n"
+      },
+      "SuccessToken" : {
+        "type" : "object",
+        "required" : [ "token" ],
+        "properties" : {
+          "token" : {
+            "$ref" : "#/components/schemas/token"
+          }
+        }
       },
       "ExpenseItem" : {
         "type" : "object",
