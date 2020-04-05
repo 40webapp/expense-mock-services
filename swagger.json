@@ -30,23 +30,24 @@
         "summary" : "ユーザー認証",
         "operationId" : "login",
         "description" : "ユーザーがログインしてJWTトークンを取得する",
-        "parameters" : [ {
-          "in" : "query",
-          "name" : "email",
+        "requestBody" : {
           "required" : true,
-          "description" : "認証用Eメールアドレス",
-          "schema" : {
-            "$ref" : "#/components/schemas/email"
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "email" : {
+                    "$ref" : "#/components/schemas/email"
+                  },
+                  "hash" : {
+                    "$ref" : "#/components/schemas/hash"
+                  }
+                }
+              }
+            }
           }
-        }, {
-          "in" : "query",
-          "name" : "hash",
-          "required" : true,
-          "description" : "認証パスワード",
-          "schema" : {
-            "$ref" : "#/components/schemas/hash"
-          }
-        } ],
+        },
         "responses" : {
           "200" : {
             "description" : "success",
@@ -73,55 +74,36 @@
         "security" : [ {
           "bearerAuth" : [ ]
         } ],
-        "parameters" : [ {
-          "in" : "query",
-          "name" : "user_id",
+        "requestBody" : {
           "required" : true,
-          "description" : "請求者ID",
-          "schema" : {
-            "$ref" : "#/components/schemas/user_id"
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_id" : {
+                    "$ref" : "#/components/schemas/user_id"
+                  },
+                  "user_name" : {
+                    "$ref" : "#/components/schemas/user_name"
+                  },
+                  "date" : {
+                    "$ref" : "#/components/schemas/date"
+                  },
+                  "type" : {
+                    "$ref" : "#/components/schemas/type"
+                  },
+                  "description" : {
+                    "$ref" : "#/components/schemas/description"
+                  },
+                  "amount" : {
+                    "$ref" : "#/components/schemas/amount"
+                  }
+                }
+              }
+            }
           }
-        }, {
-          "in" : "query",
-          "name" : "user_name",
-          "required" : false,
-          "description" : "請求者氏名",
-          "schema" : {
-            "$ref" : "#/components/schemas/user_name"
-          }
-        }, {
-          "in" : "query",
-          "name" : "date",
-          "required" : true,
-          "description" : "請求発生日時",
-          "schema" : {
-            "$ref" : "#/components/schemas/date"
-          }
-        }, {
-          "in" : "query",
-          "name" : "type",
-          "required" : true,
-          "description" : "請求項目",
-          "schema" : {
-            "$ref" : "#/components/schemas/type"
-          }
-        }, {
-          "in" : "query",
-          "name" : "description",
-          "required" : false,
-          "description" : "請求内容詳細",
-          "schema" : {
-            "$ref" : "#/components/schemas/description"
-          }
-        }, {
-          "in" : "query",
-          "name" : "amount",
-          "required" : true,
-          "description" : "請求金額",
-          "schema" : {
-            "$ref" : "#/components/schemas/amount"
-          }
-        } ],
+        },
         "responses" : {
           "200" : {
             "description" : "success",
