@@ -29,7 +29,7 @@
         "tags" : [ "users", "approvers" ],
         "summary" : "ユーザー認証",
         "operationId" : "login",
-        "description" : "ユーザーがログインしてJWTトークンを取得する\n",
+        "description" : "ユーザーがログインしてJWTトークンを取得する",
         "parameters" : [ {
           "in" : "query",
           "name" : "email",
@@ -69,7 +69,7 @@
         "tags" : [ "users", "approvers" ],
         "summary" : "請求",
         "operationId" : "submitExpense",
-        "description" : "利用者が1件の請求の申請を行う\n",
+        "description" : "利用者が1件の請求の申請を行う",
         "security" : [ {
           "bearerAuth" : [ ]
         } ],
@@ -144,7 +144,7 @@
         "tags" : [ "approvers" ],
         "summary" : "支払い待ち一覧",
         "operationId" : "findPayments",
-        "description" : "一般利用者からの請求一覧を表示\n",
+        "description" : "一般利用者からの請求一覧を表示",
         "security" : [ {
           "bearerAuth" : [ ]
         } ],
@@ -254,7 +254,7 @@
       },
       "token" : {
         "type" : "string",
-        "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiI0MzA1QkNCNi0yOUFELTQzOEEtQjA2OC00MzU5MTZBRUU1QUEiLCJib3NzX2lkIjoiRTc5RkY5NTgtOTRGQy00OUVCLUI3RjYtNTdDMzJDMjY5QzI3IiwiZmlyc3RfbmFtZSI6IuOBl-OCh-OBhiIsImxhc3RfbmFtZSI6IuOBjeOBleOCieOBjiIsImVtYWlsIjoic2hvQG9zaGlpcmUudG8iLCJpYXQiOjE1MTYyMzkwMjJ9.Ne-6UQmOmhEMwvxt0OJYcC0bSSuKznnvhCnT2thmH8I\n"
+        "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiI0MzA1QkNCNi0yOUFELTQzOEEtQjA2OC00MzU5MTZBRUU1QUEiLCJib3NzX2lkIjoiRTc5RkY5NTgtOTRGQy00OUVCLUI3RjYtNTdDMzJDMjY5QzI3IiwiZmlyc3RfbmFtZSI6IuOBl-OCh-OBhiIsImxhc3RfbmFtZSI6IuOBjeOBleOCieOBjiIsImVtYWlsIjoic2hvQG9zaGlpcmUudG8iLCJpYXQiOjE1MTYyMzkwMjJ9.Ne-6UQmOmhEMwvxt0OJYcC0bSSuKznnvhCnT2thmH8I"
       },
       "SuccessToken" : {
         "type" : "object",
