@@ -1,8 +1,8 @@
 {
   "openapi" : "3.0.0",
   "servers" : [ {
-    "description" : "Expense API",
-    "url" : "https://virtserver.swaggerhub.com/sho7650/ExpenseMockServices/1.0.0"
+    "description" : "Expense Reporter Sample API",
+    "url" : "https://virtserver.swaggerhub.com/sho7650/ExpenseMockServices/0.5.0"
   } ],
   "info" : {
     "description" : "シェルスクリプトマガジン用サンプル",
@@ -17,56 +17,157 @@
     }
   },
   "tags" : [ {
-    "name" : "admins",
-    "description" : "Secured Admin-only calls"
+    "name" : "users",
+    "description" : "一般利用者"
   }, {
-    "name" : "developers",
-    "description" : "Operations available to regular developers"
+    "name" : "approvers",
+    "description" : "承認者"
   } ],
   "paths" : {
-    "/inventory" : {
-      "get" : {
-        "tags" : [ "developers" ],
-        "summary" : "searches inventory",
-        "operationId" : "searchInventory",
-        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+    "/login" : {
+      "post" : {
+        "tags" : [ "users", "approvers" ],
+        "summary" : "ユーザー認証",
+        "operationId" : "login",
+        "description" : "ユーザーがログインしてJWTトークンを取得する\n",
         "parameters" : [ {
           "in" : "query",
-          "name" : "searchString",
-          "description" : "pass an optional search string for looking up inventory",
-          "required" : false,
+          "name" : "email",
+          "required" : true,
+          "description" : "認証用Eメールアドレス",
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/email"
           }
         }, {
           "in" : "query",
-          "name" : "skip",
-          "description" : "number of records to skip for pagination",
+          "name" : "hash",
+          "required" : true,
+          "description" : "認証パスワード",
           "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "minimum" : 0
+            "$ref" : "#/components/schemas/hash"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/success_token"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Authorization Required"
+          }
+        }
+      }
+    },
+    "/expense" : {
+      "post" : {
+        "tags" : [ "users", "approvers" ],
+        "summary" : "請求",
+        "operationId" : "submitExpense",
+        "description" : "利用者が1件の請求の申請を行う\n",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "user_id",
+          "required" : true,
+          "description" : "請求者ID",
+          "schema" : {
+            "$ref" : "#/components/schemas/user_id"
           }
         }, {
+          "in" : "query",
+          "name" : "user_name",
+          "required" : false,
+          "description" : "請求者氏名",
+          "schema" : {
+            "$ref" : "#/components/schemas/user_name"
+          }
+        }, {
+          "in" : "query",
+          "name" : "date",
+          "required" : true,
+          "description" : "請求発生日時",
+          "schema" : {
+            "$ref" : "#/components/schemas/date"
+          }
+        }, {
+          "in" : "query",
+          "name" : "type",
+          "required" : true,
+          "description" : "請求項目",
+          "schema" : {
+            "$ref" : "#/components/schemas/type"
+          }
+        }, {
+          "in" : "query",
+          "name" : "description",
+          "required" : false,
+          "description" : "請求内容詳細",
+          "schema" : {
+            "$ref" : "#/components/schemas/description"
+          }
+        }, {
+          "in" : "query",
+          "name" : "amount",
+          "required" : true,
+          "description" : "請求金額",
+          "schema" : {
+            "$ref" : "#/components/schemas/amount"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExpenseItem"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/payment" : {
+      "get" : {
+        "tags" : [ "approvers" ],
+        "summary" : "支払い待ち一覧",
+        "operationId" : "findPayments",
+        "description" : "一般利用者からの請求一覧を表示\n",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
           "in" : "query",
           "name" : "limit",
-          "description" : "maximum number of records to return",
+          "description" : "返却するレコードの最大数",
           "schema" : {
             "type" : "integer",
             "format" : "int32",
-            "minimum" : 0,
+            "minimum" : 1,
             "maximum" : 50
           }
         } ],
         "responses" : {
           "200" : {
-            "description" : "search results matching criteria",
+            "description" : "success",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "$ref" : "#/components/schemas/InventoryItem"
+                    "$ref" : "#/components/schemas/ExpenseItem"
                   }
                 }
               }
@@ -76,79 +177,117 @@
             "description" : "bad input parameter"
           }
         }
-      },
-      "post" : {
-        "tags" : [ "admins" ],
-        "summary" : "adds an inventory item",
-        "operationId" : "addInventory",
-        "description" : "Adds an item to the system",
-        "responses" : {
-          "201" : {
-            "description" : "item created"
-          },
-          "400" : {
-            "description" : "invalid input, object invalid"
-          },
-          "409" : {
-            "description" : "an existing item already exists"
-          }
-        },
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/InventoryItem"
-              }
-            }
-          },
-          "description" : "Inventory item to add"
-        }
       }
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
-      "InventoryItem" : {
+      "id" : {
+        "type" : "integer",
+        "format" : "int32",
+        "example" : 120
+      },
+      "user_id" : {
+        "type" : "string",
+        "format" : "uuid",
+        "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      },
+      "first_name" : {
+        "type" : "string",
+        "example" : "しょう"
+      },
+      "last_name" : {
+        "type" : "string",
+        "example" : "きさらぎ"
+      },
+      "email" : {
+        "type" : "string",
+        "example" : "sho@oshiire.to"
+      },
+      "hash" : {
+        "type" : "string",
+        "format" : "password"
+      },
+      "user_name" : {
+        "type" : "string",
+        "example" : "しょっさん"
+      },
+      "date" : {
+        "type" : "string",
+        "format" : "date-time",
+        "example" : "2020-03-29T09:12:33.001Z"
+      },
+      "type" : {
+        "type" : "string",
+        "example" : "交通費"
+      },
+      "amount" : {
+        "type" : "integer",
+        "format" : "int32",
+        "example" : 520
+      },
+      "description" : {
+        "type" : "string",
+        "example" : "池袋/東京"
+      },
+      "created_at" : {
+        "type" : "string",
+        "format" : "date-time",
+        "example" : "2020-04-01T13:04:12.001Z"
+      },
+      "updated_at" : {
+        "type" : "string",
+        "format" : "date-time",
+        "example" : "2020-04-02T10:42:54.001Z"
+      },
+      "deleted_at" : {
+        "type" : "string",
+        "format" : "date-time",
+        "example" : "2020-04-04T17:51:03.001Z"
+      },
+      "success_token" : {
+        "type" : "string",
+        "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiI0MzA1QkNCNi0yOUFELTQzOEEtQjA2OC00MzU5MTZBRUU1QUEiLCJib3NzX2lkIjoiRTc5RkY5NTgtOTRGQy00OUVCLUI3RjYtNTdDMzJDMjY5QzI3IiwiZmlyc3RfbmFtZSI6IuOBl-OCh-OBhiIsImxhc3RfbmFtZSI6IuOBjeOBleOCieOBjiIsImVtYWlsIjoic2hvQG9zaGlpcmUudG8iLCJpYXQiOjE1MTYyMzkwMjJ9.Ne-6UQmOmhEMwvxt0OJYcC0bSSuKznnvhCnT2thmH8I    \n"
+      },
+      "ExpenseItem" : {
         "type" : "object",
-        "required" : [ "id", "name", "manufacturer", "releaseDate" ],
+        "required" : [ "id", "user_id", "date", "type", "amount", "created_at", "updated_at" ],
         "properties" : {
           "id" : {
-            "type" : "string",
-            "format" : "uuid",
-            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            "$ref" : "#/components/schemas/id"
           },
-          "name" : {
-            "type" : "string",
-            "example" : "Widget Adapter"
+          "user_id" : {
+            "$ref" : "#/components/schemas/user_id"
           },
-          "releaseDate" : {
-            "type" : "string",
-            "format" : "date-time",
-            "example" : "2016-08-29T09:12:33.001Z"
+          "user_name" : {
+            "$ref" : "#/components/schemas/user_name"
           },
-          "manufacturer" : {
-            "$ref" : "#/components/schemas/Manufacturer"
+          "date" : {
+            "$ref" : "#/components/schemas/date"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/type"
+          },
+          "amount" : {
+            "$ref" : "#/components/schemas/amount"
+          },
+          "description" : {
+            "$ref" : "#/components/schemas/description"
+          },
+          "created_at" : {
+            "$ref" : "#/components/schemas/created_at"
+          },
+          "updated_at" : {
+            "$ref" : "#/components/schemas/updated_at"
           }
         }
-      },
-      "Manufacturer" : {
-        "required" : [ "name" ],
-        "properties" : {
-          "name" : {
-            "type" : "string",
-            "example" : "ACME Corporation"
-          },
-          "homePage" : {
-            "type" : "string",
-            "format" : "url",
-            "example" : "https://www.acme-corp.com"
-          },
-          "phone" : {
-            "type" : "string",
-            "example" : "xxx-xxx-yyyy"
-          }
-        },
-        "type" : "object"
       }
     }
   }
