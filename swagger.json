@@ -1,8 +1,11 @@
 {
   "openapi" : "3.0.0",
   "servers" : [ {
-    "description" : "Expense Reporter Sample API",
+    "description" : "SwaggerHub API Auto Mocking",
     "url" : "https://virtserver.swaggerhub.com/sho7650/ExpenseMockServices/0.5.0"
+  }, {
+    "description" : "Expense Reporter Sample API",
+    "url" : "https://virtserver.swaggerhub.com/sho7650/ExpenseMockServices/0.5.1"
   } ],
   "info" : {
     "description" : "シェルスクリプトマガジン用サンプル",
